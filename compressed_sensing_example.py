@@ -3,7 +3,7 @@ from typing import Callable
 import matplotlib.pyplot as plt
 import numpy as np
 
-import sparse_uls
+import suls
 
 np.random.seed(1234)
 
@@ -86,8 +86,7 @@ def reconstruct(measure: np.ndarray, sensing: np.ndarray, inverse_fourier: np.nd
     x[0:n] = measure
     x[n:2 * n] = np.zeros(shape=(n,), dtype=np.float64)
 
-    # f = sparse_uls.uls.solve(F, x, p=2)
-    f = sparse_uls.uls.solve_l1(F, x)
+    f = suls.solve_l1(F, x)
     f_ = np.empty(shape=(m,), dtype=np.complex128)
 
     for i in range(m):

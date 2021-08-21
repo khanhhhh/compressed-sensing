@@ -1,4 +1,4 @@
-function [x] = sparse_uls(A, b)
+function [x] = solve_l1(A, b)
   % forming a linear programming problem
   [m, n] = size(A);
   bub = zeros(2*n, 1);

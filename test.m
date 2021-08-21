@@ -4,7 +4,7 @@ m = 200;
 A = rand(m, n);
 b = rand(m, 1);
 tic;
-x = sparse_uls(A, b);
+x = solve_l1(A, b);
 toc;
 fprintf("constraint: %f\n", sum(abs(A*x-b)));
 fprintf("norm: %f\n", sum(abs(x)));

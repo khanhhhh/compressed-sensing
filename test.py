@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-from sparse_uls.uls import solve_homopoly, solve_l1
+from suls import solve_lp, solve_l1
 
 np.random.seed(1234)
 
@@ -34,7 +34,7 @@ for p in [1, 1.000001, 1.5, 2.0]:
     if p == 1:
         x = solve_l1(A, b)
     else:
-        x = solve_homopoly(A, b, p)
+        x = solve_lp(A, b, p)
     t1 = time.time()
     print(f"L^{p} time: {t1 - t0}")
     print(f"\tconstraints: {np.max(np.abs(A @ x - b))}")
