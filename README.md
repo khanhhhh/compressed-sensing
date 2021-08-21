@@ -43,39 +43,3 @@ It is easy to prove that minimal y, y1 = |x1|
 Hence, the LP formulation yeilds the same solution as the original problem.
 ```
 
-## results (m = 400, n = 2000, random A b)
-
-### L2 norm sparsity
-
-![norm2](https://raw.githubusercontent.com/khanhcsc/suls/main/assets/norm2.png)
-
-### L1.5 norm sparsity
-
-![norm15](https://raw.githubusercontent.com/khanhcsc/suls/main/assets/norm15.png)
-
-### L1.000001 norm sparsity
-
-![norm1000001](https://raw.githubusercontent.com/khanhcsc/suls/main/assets/norm1000001.png)
-
-### L1 norm sparsity
-
-![norm1](https://raw.githubusercontent.com/khanhcsc/suls/main/assets/norm1.png)
-
-## Packaging
-
-```bash
-rm -rf dist/*
-python setup.py sdist bdist_wheel
-twine upload dist/*
-
-```
-
-## Useful links
-
-- https://pypi.org/project/sparse-uls/
-
-- https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf (page 682)
-
-- https://packaging.python.org/tutorials/packaging-projects/
-
-- https://dzone.com/articles/executable-package-pip-install
