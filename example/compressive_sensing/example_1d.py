@@ -3,7 +3,7 @@ from typing import Callable
 import numpy as np
 from matplotlib import pyplot as plt
 
-from example.compressive_sensing import discrete_fourier
+from example.compressive_sensing import discrete_fourier_1d
 from example.compressive_sensing.compressive_sensing import reconstruct
 from example.compressive_sensing.sensing import create_sensing_matrix
 
@@ -42,8 +42,8 @@ plot_signal(t, true_signal)
 N = len(t)
 K = 3 * N
 
-fourier = discrete_fourier.forward(N, K)
-inverse = discrete_fourier.backward(K, N)
+fourier = discrete_fourier_1d.forward(N, K)
+inverse = discrete_fourier_1d.backward(K, N)
 
 D = int(0.3 * N)  # 30% of signal
 sensing_matrix = create_sensing_matrix(D, N)
