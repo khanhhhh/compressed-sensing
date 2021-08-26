@@ -1,7 +1,29 @@
+from typing import List
+
 import numpy as np
 import pulp
 import scipy as sp
 import scipy.optimize
+
+
+def mat_stack(mat: List[List[np.ndarray]]) -> np.ndarray:
+    """
+    [[A, B],
+     [C, D]]
+    """
+    row_list = []
+    for mat_row in mat:
+        row = np.hstack(mat_row)
+        row_list.append(row)
+    out = np.vstack(row_list)
+    return out
+
+
+def vec_stack(vec: List[np.ndarray]) -> np.ndarray:
+    """
+    [A, B]
+    """
+    return np.hstack(vec)
 
 
 def check_arguments(a: np.ndarray, b: np.ndarray):
@@ -42,20 +64,19 @@ def solve_l1(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     check_arguments(a, b)
     m, n = a.shape
 
-    a_ub = np.empty(shape=(2 * n, 2 * n))
-    a_ub[0:n, 0:n] = +np.identity(n)
-    a_ub[n:2 * n, 0:n] = -np.identity(n)
-    a_ub[0:n, n:2 * n] = -np.identity(n)
-    a_ub[n:2 * n, n:2 * n] = -np.identity(n)
+    c = vec_stack([
+        np.zeros(shape=(n,)), np.ones(shape=(n,))
+    ])
+
+    a_ub = mat_stack([
+        [+np.identity(n), -np.identity(n)],
+        [-np.identity(n), -np.identity(n)]
+    ])
     b_ub = np.zeros(shape=(2 * n))
 
-    c = np.empty(shape=(2 * n))
-    c[0:n] = 0
-    c[n:2 * n] = 1
-
-    a_eq = np.empty(shape=(m, 2 * n))
-    a_eq[:, 0:n] = a
-    a_eq[:, n:2 * n] = 0
+    a_eq = mat_stack([
+        [a, np.zeros(shape=(m, n))]
+    ])
     b_eq = b
 
     x1 = linprog(c=c, a_ub=a_ub, b_ub=b_ub, a_eq=a_eq, b_eq=b_eq)
