@@ -51,11 +51,9 @@ def solve_l1(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     x = np.array([pulp.LpVariable(name=f"x_{i}", cat=pulp.LpContinuous) for i in range(n)])
     y = np.array([pulp.LpVariable(name=f"y_{i}", cat=pulp.LpContinuous) for i in range(n)])
     for i in range(n):
-        print(f"{i}/{m}")
         model.addConstraint(y[i] >= x[i])
         model.addConstraint(y[i] >= -x[i])
     for i in range(m):
-        print(f"{i}/{m}")
         model.addConstraint(pulp.lpSum(a[i, :] * x) == b[i])
     model.setObjective(pulp.lpSum(y))
     status = model.solve()
