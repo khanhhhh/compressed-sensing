@@ -31,28 +31,28 @@ def plot_signal(*args: np.ndarray):
         plt.plot(t[argsort], f[argsort], linewidth=1, marker="o", markersize=3)
     plt.show()
 
+if __name__ == "__main__":
+    sampling_rate = 0.05
+    t = np.arange(-3, +3, sampling_rate)
 
-sampling_rate = 0.05
-t = np.arange(-3, +3, sampling_rate)
+    true_signal = create_signal(t)
 
-true_signal = create_signal(t)
+    plot_signal(t, true_signal)
 
-plot_signal(t, true_signal)
+    N = len(t)
+    K = 3 * N
 
-N = len(t)
-K = 3 * N
+    fourier = discrete_fourier_1d.forward(N, K)
+    inverse = discrete_fourier_1d.backward(K, N)
 
-fourier = discrete_fourier_1d.forward(N, K)
-inverse = discrete_fourier_1d.backward(K, N)
+    D = int(0.3 * N)  # 30% of signal
+    sensing_matrix = create_sensing_matrix(D, N)
+    measure_signal = sensing_matrix @ true_signal
+    measure_t = sensing_matrix @ t
+    plot_signal(t, true_signal, measure_t, measure_signal)
 
-D = int(0.3 * N)  # 30% of signal
-sensing_matrix = create_sensing_matrix(D, N)
-measure_signal = sensing_matrix @ true_signal
-measure_t = sensing_matrix @ t
-plot_signal(t, true_signal, measure_t, measure_signal)
+    reconstruct_signal = reconstruct(measure_signal=measure_signal, sensing_matrix=sensing_matrix,
+                                     inverse_fourier_matrix=inverse)
+    print("max diff: ", np.max(np.abs(reconstruct_signal)))
 
-reconstruct_signal = reconstruct(measure_signal=measure_signal, sensing_matrix=sensing_matrix,
-                                 inverse_fourier_matrix=inverse)
-print("max diff: ", np.max(np.abs(reconstruct_signal)))
-
-plot_signal(t, true_signal, t, reconstruct_signal)
+    plot_signal(t, true_signal, t, reconstruct_signal)
