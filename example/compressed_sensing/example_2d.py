@@ -14,7 +14,7 @@ if __name__ == "__main__":
     width, height = 0, 0
 
 
-    def open(filename: str = "example_2d.png", num_pixels: int = 2000) -> np.ndarray:
+    def open(filename: str = "example_2d.png", num_pixels: int = 100) -> np.ndarray:
         im = Image.open(filename)
         h, w = im.size
         scale = np.sqrt(num_pixels / (h * w))
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         ax_index += 1
 
 
-    true_signal = open(num_pixels=1000)
+    true_signal = open(num_pixels=2000)
 
     draw(true_signal, "true signal")
 
