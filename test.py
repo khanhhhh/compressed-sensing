@@ -39,7 +39,7 @@ if __name__ == "__main__":
     t1 = time.time()
     print(f"L^{1} time: {t1 - t0}")
     print(f"\tconstraints: {np.max(np.abs(A @ x - b))}")
-    print(f"\tL^p norm: {norm_p(x, 1)}")
+    print(f"\tL^{1} norm: {norm_p(x, 1)}")
     draw_hist(ax[ax_i], x, f"L^{1} norm")
     ax_i += 1
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         t1 = time.time()
         print(f"L^{p} time: {t1 - t0}")
         print(f"\tconstraints: {np.max(np.abs(A @ x - b))}")
-        print(f"\tL^p norm: {norm_p(x, p)}")
+        print(f"\tL^{p} norm: {norm_p(x, p)}")
         draw_hist(ax[ax_i], x, f"L^{p} norm")
         ax_i += 1
 
