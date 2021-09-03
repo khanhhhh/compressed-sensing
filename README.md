@@ -46,14 +46,21 @@ Claim 2:
 
 ## results
 
-### 30% number of pixels
+### reconstruct from a fraction of pixels
+
+```
+find sparsest solution in fourier basis
+```
+
+- 30%
 
 ![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_3.png)
 
-### 60% number of pixels
+- 60%
 
 ![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_6.png)
 
-### 80% number of pixels
+- 80%
 
 ![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_8.png)
+
