@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
 
     def open_im(filename: str, num_pixels: int) -> np.ndarray:
-        im = Image.open(filename)
+        im = Image.open(filename).convert("RGB")
         h, w = im.size
         scale = np.sqrt(num_pixels / (h * w))
         if scale < 1:
