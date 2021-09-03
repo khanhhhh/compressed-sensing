@@ -35,7 +35,7 @@ def reconstruct(measure_signal: np.ndarray, measure_matrix: np.ndarray,
         [measure_signal],
         [np.zeros(shape=(n,), dtype=np.float64)],
     ]).flatten()
-    y = suls.solve_lp(F, x, 1)
+    y = suls.solve_lp(F, x)
     f = np.empty(shape=(m,), dtype=np.complex128)
 
     for i in range(m):
