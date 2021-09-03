@@ -15,7 +15,7 @@ def assert_arguments(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarr
     return A.astype(np.float64), b.astype(np.float64)
 
 
-def solve_lp(A: np.ndarray, b: np.ndarray, p: int = 1, a: float = 1) -> np.ndarray:
+def solve_lp(A: np.ndarray, b: np.ndarray, p: int = 1, a: float = 0.01) -> np.ndarray:
     """
     Minimizer of ||x||_p
     Given Ax=b

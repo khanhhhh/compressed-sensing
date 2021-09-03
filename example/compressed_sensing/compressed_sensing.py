@@ -66,8 +66,6 @@ def reconstruct_complex(
     ]).flatten()
     y = suls.solve_lp(F, x)
     f = np.empty(shape=(m,), dtype=np.complex128)
-
-    for i in range(m):
-        f[i] = complex(y[i], y[i + m])
+    f.real, f.imag = y[0:m], y[m:2*m]
     reconstruct_signal = inverse_transform_matrix @ f
     return reconstruct_signal
