@@ -46,16 +46,12 @@ def create_grid_adj_matrix(grid_h: int, grid_w: int) -> sp.sparse.coo_matrix:
             return False
         return True
 
-    row = []
-    col = []
-    data = []
+    adj = np.zeros(shape=(n, n), dtype=bool)
     for h0, w0 in coord_list:
         for dh, dw in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             h1, w1 = h0 + dh, w0 + dw
             if is_inside(h1, w1):
                 i0, i1 = c2i[(h0, w0)], c2i[(h1, w1)]
-                row.append(i0)
-                col.append(i1)
-                data.append(True)
-    adj = sp.sparse.coo_matrix((data, (row, col)), shape=(n, n), dtype=np.bool)
+                adj[i0, i1] = True
+    adj = sp.sparse.coo_matrix(adj)
     return adj
