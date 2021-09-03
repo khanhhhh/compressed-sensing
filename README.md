@@ -53,3 +53,7 @@ Claim 2:
 ### 60% number of pixels
 
 ![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_6.png)
+
+### 80% number of pixels
+
+![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_8.png)
