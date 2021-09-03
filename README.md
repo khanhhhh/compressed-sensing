@@ -46,4 +46,10 @@ Claim 2:
 
 ## results
 
-![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d.png)
+### 30% number of pixels
+
+![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_3.png)
+
+### 60% number of pixels
+
+![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_6.png)
