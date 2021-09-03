@@ -56,9 +56,9 @@ find sparsest solution in fourier basis
 
 ![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_3.png)
 
-- 60%
+- 50%
 
-![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_6.png)
+![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/main/assets/example_2d_0_5.png)
 
 - 80%
 
