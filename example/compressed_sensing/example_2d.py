@@ -2,12 +2,11 @@ import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
 
-from example.compressed_sensing import discrete_fourier_2d
-from example.compressed_sensing.compressed_sensing import reconstruct
+from example.compressed_sensing import fourier_2d, laplacian, compressed_sensing
 from example.compressed_sensing.measure import create_measure_matrix
 
 if __name__ == "__main__":
-    fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(12.0, 4.0))
+    fig, ax = plt.subplots(nrows=1, ncols=4, figsize=(16.0, 4.0))
     ax = ax.flatten()
     ax_index = 0
 
@@ -46,30 +45,45 @@ if __name__ == "__main__":
         return im
 
     # open true im
-    true_im = open_im(filename="example_2d.png", num_pixels=2000)
+    true_im = open_im(filename="example_2d.png", num_pixels=1000)
     draw_im(true_im, "true signal")
     height, width, channel = true_im.shape
     true_signal = im2sig(true_im)
 
     # create measure im
     N = len(true_signal)
-    D = int(0.3 * N)
+    D = int(0.5 * N)
     measure_matrix = create_measure_matrix(D, N)
     measure_signal = measure_matrix @ true_signal
     measure_im = sig2im(measure_matrix.T @ measure_signal)
     draw_im(measure_im, "measure signal")
 
-    # reconstruct true im
+    # reconstruct true im (fourier basis)
+    _, inverse_fourier_matrix = fourier_2d.basis(height, width, height, width)
     reconstruct_signal = np.empty(shape=(height * width, channel), dtype=np.complex128)
     for c in range(channel):
-        reconstruct_signal[:, c] = reconstruct(
+        reconstruct_signal[:, c] = compressed_sensing.reconstruct_complex(
             measure_signal=measure_signal[:, c],
             measure_matrix=measure_matrix,
-            inverse_fourier_matrix=discrete_fourier_2d.backward(2 * height, 2 * width, height, width),
+            inverse_fourier_matrix=inverse_fourier_matrix,
         )
     reconstruct_im = sig2im(reconstruct_signal)
-    draw_im(reconstruct_im, "reconstruct signal")
+    draw_im(reconstruct_im, "reconstruct signal (fourier basis)")
+
+    # reconstruct true im (laplacian basis)
+    adj = laplacian.create_grid_adj_matrix(height, width)
+    _, inverse_laplacian_matrix = laplacian.basis(adj)
+    reconstruct_signal = np.empty(shape=(height * width, channel), dtype=np.complex128)
+    for c in range(channel):
+        reconstruct_signal[:, c] = compressed_sensing.reconstruct_real(
+            measure_signal=measure_signal[:, c],
+            measure_matrix=measure_matrix,
+            inverse_transform_matrix=inverse_laplacian_matrix,
+        )
+    reconstruct_im = sig2im(reconstruct_signal)
+    draw_im(reconstruct_im, "reconstruct signal (laplacian basis)")
 
     # draw
+    fig.suptitle(f"image size: {height} x {width}")
     plt.tight_layout()
     plt.show()
