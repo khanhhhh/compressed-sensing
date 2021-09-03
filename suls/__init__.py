@@ -5,6 +5,7 @@ import numpy as np
 import pulp
 import scipy as sp
 import scipy.optimize
+import cvxpy as cp
 
 
 def check_arguments(a: np.ndarray, b: np.ndarray):
@@ -37,8 +38,30 @@ def solve_lp(a: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
     t2 = time.time()
     solution = sp.optimize.minimize(objective, x0, method="L-BFGS-B", jac=gradient)
     t3 = time.time()
-    print(f"model solving.... {t3-t2}s")
+    print(f"model solving.... {t3 - t2}s")
     return solution.x
+
+
+def solve_lp_cvxpy(a: np.ndarray, b: np.ndarray, p: int = 1) -> np.ndarray:
+    """
+    Minimizer of ||x||_p^p
+    Given Ax=b
+    By minimizing ||Ax-b||_2^2 + ||x||_p^p
+    """
+
+    check_arguments(a, b)
+    m, n = a.shape
+
+    t1 = time.time()
+    x = cp.Variable(shape=(n,))
+    objective = cp.Minimize(cp.sum_squares(a @ x - b) + cp.norm(x, p))
+    problem = cp.Problem(objective)
+    t2 = time.time()
+    print(f"model building... {t2 - t1}s")
+    problem.solve()
+    t3 = time.time()
+    print(f"model solving.... {t3 - t2}s")
+    return x.value
 
 
 def solve_l1(a: np.ndarray, b: np.ndarray) -> np.ndarray:
@@ -63,10 +86,10 @@ def solve_l1(a: np.ndarray, b: np.ndarray) -> np.ndarray:
         model.addConstraint(pulp.LpAffineExpression({x[j]: a[i, j] for j in range(n)}) == b[i])
     model.setObjective(pulp.lpSum(y))
     t2 = time.time()
-    print(f"model building... {t2-t1}s")
+    print(f"model building... {t2 - t1}s")
     status = model.solve(pulp.COIN_CMD(msg=False, mip=False, threads=os.cpu_count(), options=["barrier"]))
     t3 = time.time()
-    print(f"model solving.... {t3-t2}s")
+    print(f"model solving.... {t3 - t2}s")
     if status != pulp.LpStatusOptimal:
         raise RuntimeError(status)
 
