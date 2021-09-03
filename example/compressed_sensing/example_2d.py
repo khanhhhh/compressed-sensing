@@ -11,20 +11,19 @@ if __name__ == "__main__":
     ax = ax.flatten()
     ax_index = 0
 
-    width, height = 0, 0
+    width, height, channel = 0, 0, 0
 
 
-    def open(filename: str = "example_2d.png", num_pixels: int = 100) -> np.ndarray:
+    def open(filename: str, num_pixels: int) -> np.ndarray:
         im = Image.open(filename)
         h, w = im.size
         scale = np.sqrt(num_pixels / (h * w))
-        global width, height
-        width, height = int(w * scale), int(h * scale)
-        im.thumbnail(size=(height, width), resample=Image.ANTIALIAS)
+        im.thumbnail(size=(int(w * scale), int(h * scale)), resample=Image.ANTIALIAS)
         im = np.array(im)
-        im = im[:, :, 0]
-        height, width = im.shape
-        im = im.flatten()
+        # im = im[:, :, 0]
+        global width, height, channel
+        height, width, channel = im.shape
+        im = im.reshape((height*width, channel))
         return im
 
 
@@ -34,25 +33,27 @@ if __name__ == "__main__":
         im[im < 0] = 0
         im[im > 255] = 255
         im = im.astype(np.uint8)
-        im = im.reshape((height, width))
+        im = im.reshape((height, width, channel))
         global ax_index
         ax[ax_index].imshow(im)
         ax[ax_index].set_title(title)
         ax_index += 1
 
 
-    true_signal = open(num_pixels=2000)
+    true_signal = open(filename="example_2d.png", num_pixels=6000)
 
     draw(true_signal, "true signal")
 
     N = len(true_signal)
-    D = int(0.6 * N)
+    D = int(0.3 * N)
     measure_matrix = create_measure_matrix(D, N)
     measure_signal = measure_matrix @ true_signal
 
     draw(measure_matrix.T @ measure_signal, "measure signal")
 
-    reconstruct_signal = reconstruct(measure_signal, measure_matrix, discrete_fourier_2d.backward(2*height, 2*width, height, width))
+    reconstruct_signal = np.empty(shape=(height*width, channel), dtype=np.complex128)
+    for c in range(channel):
+        reconstruct_signal[:, c] = reconstruct(measure_signal[:, c], measure_matrix, discrete_fourier_2d.backward(2*height, 2*width, height, width))
 
     draw(reconstruct_signal, "reconstruct signal")
 
