@@ -64,3 +64,7 @@ find sparsest solution in fourier basis and laplacian basis
 
 ![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/master/assets/example_2d_0_8.png)
 
+### single pixel camera
+
+![example_2d](https://raw.githubusercontent.com/khanh-nguyen-code/suls/master/assets/example_2d_1000.png)
+

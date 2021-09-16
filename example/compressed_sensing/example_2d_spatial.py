@@ -59,7 +59,7 @@ if __name__ == "__main__":
         return im
 
 
-    true_im = open_im(filename="example_2d.png", height=32, width=32)
+    true_im = open_im(filename="example_2d_spatial.png", height=32, width=32)
     draw_im(true_im, true_im, "true signal")
     height, width, channel = true_im.shape
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         b = m @ true_signal
         A_list.append(m)
         b_list.append(b)
-        if len(b_list) % 1000 == 0:
+        if len(b_list) % 100 == 0:
             # reconstruct
             reconstruct_signal = pool.map(
                 solve_lp_helper,

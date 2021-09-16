@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
 
     # open true im
-    true_im = open_im(filename="example_2d.png", height=32, width=32)
+    true_im = open_im(filename="example_2d_spectral.png", height=32, width=32)
     draw_im(true_im, "true signal")
     height, width, channel = true_im.shape
     true_signal = im2sig(true_im)
