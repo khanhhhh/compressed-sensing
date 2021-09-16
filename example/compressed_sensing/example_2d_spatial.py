@@ -5,6 +5,8 @@ import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
 from multiprocess.pool import Pool
+from pathos.multiprocessing import ProcessPool
+from pathos.parallel import ParallelPool
 
 import suls
 
@@ -65,7 +67,7 @@ if __name__ == "__main__":
     A_list = []
     b_list = []
 
-    pool = Pool()
+    pool = ProcessPool()
     while True:
         # measure
         m = np.random.randint(low=0, high=2, size=(height*width)).astype(np.float64)
@@ -75,8 +77,9 @@ if __name__ == "__main__":
         if len(b_list) % 100 == 0:
             # reconstruct
             reconstruct_signal = pool.map(
-                func=lambda args: suls.solve_lp(*args),
-                iterable=[(np.array(A_list), np.array(b_list)[:, i]) for i in range(channel)],
+                suls.solve_lp,
+                [np.array(A_list) for _ in range(channel)],
+                [np.array(b_list)[:, i] for i in range(channel)],
             )
             reconstruct_signal = np.array(reconstruct_signal).T
             reconstruct_im = sig2im(reconstruct_signal)

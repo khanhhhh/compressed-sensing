@@ -4,6 +4,8 @@ import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
 from multiprocess.pool import Pool
+from pathos.multiprocessing import ProcessPool
+from pathos.parallel import ParallelPool
 
 import suls
 from example.compressed_sensing import basis
@@ -152,33 +154,30 @@ if __name__ == "__main__":
     draw_im(measure_im, "measure signal")
 
     # reconstruct true im
-    pool = Pool()
+    pool = ProcessPool()
 
     _, inverse_fourier_matrix = basis.fourier_2d(height, width, height, width)
-    result_fourier = []
-    for c in range(channel):
-        result_fourier.append(pool.apply_async(
-            func=reconstruct_complex,
-            args=(measure_signal[:, c], measure_matrix, inverse_fourier_matrix),
-        ))
+    reconstruct_signal_fourier = pool.amap(
+        reconstruct_complex,
+        [measure_signal[:, c] for c in range(channel)],
+        [measure_matrix for _ in range(channel)],
+        [inverse_fourier_matrix for _ in range(channel)]
+    )
 
     adj = create_grid_adj_matrix(height, width)
     _, inverse_laplacian_matrix = basis.laplacian(adj)
-    result_laplacian = []
-    for c in range(channel):
-        result_laplacian.append(pool.apply_async(
-            func=reconstruct_real,
-            args=(measure_signal[:, c], measure_matrix, inverse_laplacian_matrix),
-        ))
-
-    reconstruct_signal_fourier = np.empty(shape=(height * width, channel), dtype=np.complex128)
-    for c in range(channel):
-        reconstruct_signal_fourier[:, c] = result_fourier[c].get()
+    reconstruct_signal_laplacian = pool.amap(
+        reconstruct_real,
+        [measure_signal[:, c] for c in range(channel)],
+        [measure_matrix for _ in range(channel)],
+        [inverse_laplacian_matrix for _ in range(channel)]
+    )
+    reconstruct_signal_fourier = reconstruct_signal_fourier.get()
+    reconstruct_signal_fourier = np.array(reconstruct_signal_fourier).T
     draw_im(sig2im(reconstruct_signal_fourier), "reconstruct signal (fourier basis)")
 
-    reconstruct_signal_laplacian = np.empty(shape=(height * width, channel), dtype=np.float64)
-    for c in range(channel):
-        reconstruct_signal_laplacian[:, c] = result_laplacian[c].get()
+    reconstruct_signal_laplacian = reconstruct_signal_laplacian.get()
+    reconstruct_signal_laplacian = np.array(reconstruct_signal_laplacian).T
     draw_im(sig2im(reconstruct_signal_laplacian), "reconstruct signal (laplacian basis)")
 
     # draw
